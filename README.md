@@ -54,7 +54,7 @@ Desde la terminal de tu Tiny Core, ejecuta estos comandos:
 wget https://github.com/JOSSEL01/tinycore-git-i686/raw/main/packages/git-2.56.0.tcz
 
 # Mover a la carpeta de extensiones
-sudo mv git-2.56.0.tcz /etc/sysconfig/tcedir/optional/
+sudo mv git-2.56.0.tcz /mnt/sda(_)/tce/optional/
 
 # Instalar
 tce-load -i git-2.56.0

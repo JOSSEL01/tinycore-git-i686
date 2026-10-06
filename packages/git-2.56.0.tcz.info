@@ -1,0 +1,11 @@
+Title:          git.tcz
+Description:    Git distributed version control system (v2.56.0)
+Version:        2.56.0
+Author:         Git Development Community
+Original-site:  https://git-scm.com
+Copying-policy: GPLv2
+Size:           47M
+Extension_by:   Jose Andres Mamani Mollericona
+Comments:       Compilado para i686 desde Fedora 43 (github.com/JOSSEL01)
+Change-log:     Compilado manualmente
+Current:        2026-10-06

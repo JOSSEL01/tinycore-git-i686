@@ -7,14 +7,15 @@
 # ============================================
 # Este script hace TODO el proceso:
 # 1. Instala dependencias (incluido Rust)
-# 2. Descarga el código fuente
-# 3. Configura para i686
-# 4. Compila con Rust
-# 5. Instala en directorio temporal
-# 6. Estripa binarios
-# 7. Crea metadatos (.info, .dep, .list)
-# 8. Empaqueta como .tcz
-# 9. Genera el .md5.txt
+# 2. Configura Rust para i686
+# 3. Descarga el código fuente
+# 4. Configura para i686
+# 5. Compila con Rust
+# 6. Instala en directorio temporal
+# 7. Estripa binarios
+# 8. Crea metadatos (.info, .dep, .list)
+# 9. Empaqueta como .tcz
+# 10. Genera el .md5.txt
 # ============================================
 
 set -e
@@ -55,7 +56,6 @@ fi
 # ============================================
 echo -e "\n${YELLOW}[1/9] Instalando dependencias...${NC}"
 
-# Verificar si estamos en Fedora/RHEL
 if command -v dnf &> /dev/null; then
     PKG_MANAGER="dnf"
 elif command -v yum &> /dev/null; then
@@ -65,103 +65,60 @@ else
     exit 1
 fi
 
-# Lista de paquetes necesarios (incluye Rust y Cargo)
 PACKAGES=(
-    "gcc"
-    "gcc-c++"
-    "make"
-    "python3"
-    "perl"
-    "wget"
-    "tar"
-    "xz"
-    "autoconf"
-    "automake"
-    "libtool"
-    "gettext"
-    "gettext-devel"
-    "curl-devel"
-    "expat-devel"
-    "openssl-devel"
-    "zlib-devel"
-    "perl-devel"
-    "rust"
-    "cargo"
-    "glibc-devel.i686"
-    "libstdc++.i686"
-    "openssl-devel.i686"
-    "zlib-ng-compat-devel.i686"
-    "libstdc++-devel.i686"
-    "libgcc.i686"
-    "libcurl-devel.i686"
-    "expat-devel.i686"
-    "gettext-devel.i686"
-    "perl-devel.i686"
+    "gcc" "gcc-c++" "make" "python3" "perl" "wget" "tar" "xz"
+    "autoconf" "automake" "libtool"
+    "gettext" "gettext-devel"
+    "curl-devel" "expat-devel" "openssl-devel" "zlib-devel" "perl-devel"
+    "rust" "cargo"
+    "glibc-devel.i686" "libstdc++.i686" "openssl-devel.i686"
+    "zlib-ng-compat-devel.i686" "libstdc++-devel.i686" "libgcc.i686"
+    "libcurl-devel.i686" "expat-devel.i686" "gettext-devel.i686" "perl-devel.i686"
     "squashfs-tools"
 )
 
-# Instalar paquetes (ignorar errores de paquetes ya instalados)
-echo -e "${YELLOW}Instalando paquetes de compilación (esto puede tardar unos minutos)...${NC}"
+echo -e "${YELLOW}Instalando paquetes de compilación...${NC}"
 $SUDO $PKG_MANAGER install -y "${PACKAGES[@]}" 2>&1 | tail -10
 
-# Verificar que autoconf esté instalado
 if ! command -v autoconf &> /dev/null; then
-    echo -e "${RED}Error: autoconf no se instaló correctamente.${NC}"
-    echo -e "${YELLOW}Intenta manualmente: sudo dnf install -y autoconf automake libtool${NC}"
+    echo -e "${RED}Error: autoconf no se instaló.${NC}"
     exit 1
 fi
 
-# Verificar que cargo (Rust) esté instalado
 if ! command -v cargo &> /dev/null; then
-    echo -e "${RED}Error: cargo (Rust) no se instaló correctamente.${NC}"
-    echo -e "${YELLOW}Intenta manualmente: sudo dnf install -y rust cargo${NC}"
+    echo -e "${RED}Error: cargo (Rust) no se instaló.${NC}"
     exit 1
 fi
 
-# Verificar soporte 32 bits
 echo 'int main(){return 0;}' > /tmp/test-git.c
 if ! gcc -m32 /tmp/test-git.c -o /tmp/test-git 2>/dev/null; then
-    echo -e "${RED}Error: GCC no puede compilar para 32 bits.${NC}"
-    echo -e "${YELLOW}Instala: sudo dnf install -y glibc-devel.i686 libstdc++.i686${NC}"
+    echo -e "${RED}Error: GCC no compila para 32 bits.${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}✓ Dependencias instaladas y verificadas${NC}"
+echo -e "${GREEN}✓ Dependencias verificadas${NC}"
 
 # ============================================
-# [2/9] INSTALAR RUSTUP Y TARGET i686
+# [2/9] CONFIGURAR RUSTUP Y TARGET i686
 # ============================================
 echo -e "\n${YELLOW}[2/9] Configurando Rust para i686...${NC}"
-# Verificar si rustup está instalado
+
 if ! command -v rustup &> /dev/null; then
     echo -e "${YELLOW}Instalando rustup...${NC}"
     $SUDO $PKG_MANAGER install -y rustup
-    
-    # Inicializar rustup sin interacción
     if [ ! -d "$HOME/.rustup" ]; then
         rustup-init -y --default-toolchain stable --profile default 2>&1 | tail -5
     fi
-    
-    # Cargar entorno
     source "$HOME/.cargo/env" 2>/dev/null || true
 fi
 
-# Verificar que rustup funciona
 if ! command -v rustup &> /dev/null; then
-    echo -e "${RED}Error: rustup no se instaló correctamente.${NC}"
-    echo -e "${YELLOW}Intenta manualmente:${NC}"
-    echo "  sudo dnf install -y rustup"
-    echo "  rustup-init -y"
-    echo "  source \$HOME/.cargo/env"
-    echo "  rustup target add i686-unknown-linux-gnu"
+    echo -e "${RED}Error: rustup no disponible.${NC}"
     exit 1
 fi
 
-# Añadir el target de 32 bits
-echo -e "${YELLOW}Añadiendo target i686-unknown-linux-gnu...${NC}"
 rustup target add i686-unknown-linux-gnu 2>&1 | tail -3
 
-# Configurar el linker para i686
 mkdir -p "$HOME/.cargo"
 cat > "$HOME/.cargo/config.toml" << 'EOF'
 [target.i686-unknown-linux-gnu]
@@ -177,7 +134,6 @@ echo -e "\n${YELLOW}[3/9] Descargando Git $GIT_VERSION...${NC}"
 
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
-
 if [ ! -f "git-$GIT_VERSION.tar.xz" ]; then
     wget "https://www.kernel.org/pub/software/scm/git/git-$GIT_VERSION.tar.xz"
 else
@@ -208,9 +164,8 @@ echo -e "${GREEN}✓ Configuración completada${NC}"
 # [5/9] COMPILAR
 # ============================================
 echo -e "\n${YELLOW}[5/9] Compilando Git con $(nproc) hilos...${NC}"
-echo -e "${YELLOW}Esto puede tardar 10-20 minutos (Rust incluido)...${NC}"
+echo -e "${YELLOW}Esto puede tardar 10-20 minutos...${NC}"
 
-# Compilar con el target de Rust para i686
 make CARGO_BUILD_TARGET=i686-unknown-linux-gnu -j$(nproc)
 
 echo -e "${GREEN}✓ Compilación completada${NC}"
@@ -245,10 +200,10 @@ echo -e "${GREEN}✓ Binarios estripados${NC}"
 # ============================================
 echo -e "\n${YELLOW}[8/9] Creando metadatos y empaquetando...${NC}"
 
-# Calcular tamaño
 PACKAGE_SIZE=$(du -sh "$PACKAGE_DIR" | cut -f1)
 
 # Crear archivo .info
+mkdir -p "$PACKAGE_DIR/usr/local/share"
 cat > "$PACKAGE_DIR/usr/local/share/git.tcz.info" << EOF
 Title:          git.tcz
 Description:    Git distributed version control system (v$GIT_VERSION)
@@ -262,6 +217,7 @@ Comments:       Compilado para i686 desde Fedora 43 (github.com/JOSSEL01)
 Change-log:     Compilado manualmente
 Current:        $(date +%Y-%m-%d)
 EOF
+
 # Crear archivo .dep
 cat > "$OUTPUT_DIR/$EXTENSION_NAME.tcz.dep" << EOF
 openssl.tcz
@@ -278,6 +234,9 @@ mksquashfs git-package "$EXTENSION_NAME.tcz"
 
 # Crear .md5.txt
 md5sum "$EXTENSION_NAME.tcz" > "$EXTENSION_NAME.tcz.md5.txt"
+
+# Copiar el .info al directorio de salida con el nombre correcto
+cp "$PACKAGE_DIR/usr/local/share/git.tcz.info" "$OUTPUT_DIR/$EXTENSION_NAME.tcz.info"
 
 echo -e "${GREEN}✓ Metadatos y paquete creados${NC}"
 

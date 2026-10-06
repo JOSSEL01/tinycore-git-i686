@@ -17,6 +17,7 @@ Extensión .tcz de Git v2.56.0 compilada para Tiny Core Linux 17.0 (i686, 32 bit
 - [Instalación manual](#-instalación-manual)
 - [Verificación](#-verificación)
 - [Detalles de compilación](#-detalles-de-compilación)
+- [Limitaciones](#-limitaciones)
 - [Solución de problemas](#-solución-de-problemas)
 - [Recompilar desde cero](#-recompilar-desde-cero)
 - [Licencia](#-licencia)
@@ -27,10 +28,10 @@ Extensión .tcz de Git v2.56.0 compilada para Tiny Core Linux 17.0 (i686, 32 bit
 
 - ✅ Git v2.56.0 (última versión estable)
 - ✅ Compilado para i686 (32 bits)
-- ✅ Incluye Rust compilado para i686
+- ✅ Incluye Rust compilado para i686 (necesario para Git 2.56+)
 - ✅ Binarios estripados para reducir el tamaño
-- ✅ Compatible con glibc 2.42
-- ✅ Incluye git, git-shell, git-upload-pack, etc.
+- ✅ Compatible con glibc 2.42 (la misma que usa Tiny Core 17.0)
+- ✅ Tamaño del paquete: ~20 MB
 
 ---
 
@@ -40,15 +41,23 @@ Extensión .tcz de Git v2.56.0 compilada para Tiny Core Linux 17.0 (i686, 32 bit
 - Arquitectura i686 (32 bits)
 - glibc 2.42 o superior
 - Al menos 50 MB de espacio libre en disco
+- Conexión a Internet (solo para la instalación rápida)
 
 ---
 
 ## 🚀 Instalación rápida
 
-Desde la terminal de tu Tiny Core:
+Desde la terminal de tu Tiny Core, ejecuta estos comandos:
 
 `bash
+# Descargar la extensión
 wget https://github.com/JOSSEL01/tinycore-git-i686/raw/main/packages/git-2.56.0.tcz
+
+# Mover a la carpeta de extensiones
 sudo mv git-2.56.0.tcz /etc/sysconfig/tcedir/optional/
+
+# Instalar
 tce-load -i git-2.56.0
+
+# Verificar
 git --version

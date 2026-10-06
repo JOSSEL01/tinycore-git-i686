@@ -59,5 +59,10 @@ sudo mv git-2.56.0.tcz /etc/sysconfig/tcedir/optional/
 # Instalar
 tce-load -i git-2.56.0
 
+# Colocar en Onboot
+nano /etc/sysconfig/tcedir/onboot.lst
+
+Ir hasta la parte final del archivo y poner git-2.56.0.tcz y con las teclas ctrl + o luego enter luego ctrl + x y ya estaria
+
 # Verificar
 git --version

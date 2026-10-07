@@ -1,3 +1,11 @@
+# Archivos de compilación
 git-build/
 *.tar.xz
+*.tar.gz
 out/
+
+# Archivos temporales
+*.o
+*.a
+*.so
+*.tmp

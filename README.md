@@ -50,7 +50,7 @@ Desde la terminal de tu Tiny Core:
 
 ```bash
 wget https://github.com/JOSSEL01/tinycore-git-i686/raw/main/packages/git-2.56.0.tcz
-sudo mv git-2.56.0.tcz /etc/sysconfig/tcedir/optional/
+sudo mv git-2.56.0.tcz /mnt/sda(_)/tce/optional/
 tce-load -i git-2.56.0
 git --version
 ```
@@ -62,12 +62,18 @@ Deberías ver: `git version 2.56.0`
 ## 🔧 Instalación manual
 
 1. Descarga `git-2.56.0.tcz` desde la carpeta `packages/`.
-2. Cópialo a `/etc/sysconfig/tcedir/optional/` en tu Tiny Core.
+2. Cópialo a `/mnt/sda(_)/tce/optional/` en tu Tiny Core.
 3. Ejecuta:
    ```bash
    tce-load -i git-2.56.0
    ```
-4. Verifica:
+
+4. Colocar en Onboot:
+   nano /etc/sysconfig/tcedir/onboot.lst
+
+   Ir hasta la parte final del archivo y poner git-2.56.0.tcz y con las teclas ctrl + o luego enter luego ctrl + x y ya estaria
+   
+5. Verifica:
    ```bash
    git --version
    ```

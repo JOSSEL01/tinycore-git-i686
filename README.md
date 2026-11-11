@@ -1,6 +1,13 @@
 # Git 2.56.1 para Tiny Core Linux i686
 
+![Git](https://img.shields.io/badge/Git-v2.56.1-orange)
+![Platform](https://img.shields.io/badge/Platform-i686-blue)
+![Tiny Core](https://img.shields.io/badge/Tiny%20Core-17.0-green)
+![License](https://img.shields.io/badge/License-GPLv2-yellow)
+
 Extensión `.tcz` de **Git v2.56.1** compilada para **Tiny Core Linux 17.0 (i686, 32 bits)**.
+
+---
 
 ## 📋 Tabla de contenidos
 
@@ -8,11 +15,14 @@ Extensión `.tcz` de **Git v2.56.1** compilada para **Tiny Core Linux 17.0 (i686
 - [Requisitos](#-requisitos)
 - [Instalación rápida](#-instalación-rápida)
 - [Instalación manual](#-instalación-manual)
+- [Actualización](#-actualización)
 - [Verificación](#-verificación)
 - [Detalles de compilación](#-detalles-de-compilación)
 - [Solución de problemas](#-solución-de-problemas)
 - [Recompilar desde cero](#-recompilar-desde-cero)
 - [Licencia](#-licencia)
+
+---
 
 ## ✨ Características
 
@@ -23,6 +33,8 @@ Extensión `.tcz` de **Git v2.56.1** compilada para **Tiny Core Linux 17.0 (i686
 - ✅ Compatible con **glibc 2.42**
 - ✅ Tamaño del paquete: **~20 MB**
 
+---
+
 ## 📦 Requisitos
 
 - **Tiny Core Linux 17.0** (o compatible)
@@ -30,6 +42,8 @@ Extensión `.tcz` de **Git v2.56.1** compilada para **Tiny Core Linux 17.0 (i686
 - **glibc 2.42** o superior
 - Al menos **50 MB de espacio libre** en disco
 - Dependencias: `openssl.tcz`, `zlib.tcz`
+
+---
 
 ## 🚀 Instalación rápida
 
@@ -43,6 +57,8 @@ git --version
 ```
 
 Deberías ver: `git version 2.56.1`
+
+---
 
 ## 🔧 Instalación manual
 
@@ -59,6 +75,30 @@ Deberías ver: `git version 2.56.1`
    git --version
    ```
 
+---
+
+## 🔄 Actualización
+
+Si ya tienes una versión anterior de Git instalada, sigue estos pasos para actualizar sin conflictos:
+
+1. **Desinstala la versión anterior:**
+   ```bash
+   tce-remove git-versión-anterior
+   ```
+2. **Descarga e instala la nueva versión:**
+   ```bash
+   wget https://github.com/JOSSEL01/tinycore-git-i686/raw/main/packages/git-2.56.1.tcz
+   sudo mv git-2.56.1.tcz /mnt/sda(_)/tce/optional/
+   tce-load -i git-2.56.1
+   ```
+3. **Actualiza el archivo `onboot.lst` (si lo usas):**
+   ```bash
+   nano /etc/sysconfig/tcedir/onboot.lst
+   ```
+   Cambia el nombre de la versión anterior por `git-2.56.1.tcz`.
+
+---
+
 ## ✅ Verificación
 
 ```bash
@@ -68,6 +108,8 @@ git --version
 file $(which git)
 # Salida esperada: ELF 32-bit LSB executable, Intel 80386...
 ```
+
+---
 
 ## 🛠️ Detalles de compilación
 
@@ -79,6 +121,8 @@ file $(which git)
 | **glibc** | 2.42 |
 | **GCC** | 15.2.0 |
 | **Rust** | Con target `i686-unknown-linux-gnu` |
+
+---
 
 ## 🐛 Solución de problemas
 
@@ -103,6 +147,8 @@ tce-load -wi expat2
 tce-load -wi openssl
 ```
 
+---
+
 ## 🔨 Recompilar desde cero
 
 Usa el script `build.sh` incluido en este repositorio:
@@ -112,11 +158,15 @@ chmod +x build.sh
 ./build.sh
 ```
 
-El script buscará automáticamente la última versión estable de Git y la compilará.
+El script buscará y compilará automáticamente la última versión disponible de Git.
+
+---
 
 ## 📄 Licencia
 
-Git es software libre bajo la licencia GPLv2.
+Git es software libre bajo la [licencia GPLv2](https://github.com/git/git/blob/master/COPYING).
+
+---
 
 ## 📞 Contacto
 

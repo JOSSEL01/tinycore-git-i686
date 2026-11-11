@@ -83,7 +83,7 @@ Si ya tienes una versión anterior de Git instalada, sigue estos pasos para actu
 
 1. **Desinstala la versión anterior:**
    ```bash
-   tce-remove git-versión-anterior
+   tce-remove git-2.56.0
    ```
 2. **Descarga e instala la nueva versión:**
    ```bash
@@ -95,7 +95,7 @@ Si ya tienes una versión anterior de Git instalada, sigue estos pasos para actu
    ```bash
    nano /etc/sysconfig/tcedir/onboot.lst
    ```
-   Cambia el nombre de la versión anterior por `git-2.56.1.tcz`.
+   Cambia el nombre de `git-2.56.0.tcz` por `git-2.56.1.tcz`.
 
 ---
 
